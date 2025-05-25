@@ -1,0 +1,158 @@
+<!-- filepath: c:\Users\Miraç\Forex\templates\index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex İşlem Hesaplayıcı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #cccccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .result h2 {
+        text-align: center;
+        color: #333333;
+        margin-bottom: 20px;
+    }
+    .summary p, .profit-loss p {
+        margin: 10px 0;
+        font-size: 16px;
+    }
+    .highlight {
+        font-weight: bold;
+        color: #333333;
+    }
+    .profit {
+        color: #4CAF50;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }
+    .loss {
+        color: #f44336;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }
+    .icon {
+        font-size: 20px;
+        margin-right: 8px;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Forex İşlem Hesaplayıcı</h1>
+        <form method="POST">
+            <label for="asset">Varlık:</label>
+            <select id="asset" name="asset" required>
+                {% for asset in assets %}
+                <option value="{{ asset }}">{{ asset }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="balance">Bakiye (USD):</label>
+            <input type="text" id="balance" name="balance" required>
+
+            <label for="calculation_type">Zarar Türü:</label>
+            <select id="calculation_type" name="calculation_type" onchange="toggleFields()" required>
+                <option value="Risk Yüzdesi">Risk Yüzdesi</option>
+                <option value="Zarar Tutarı">Zarar Tutarı</option>
+            </select>
+
+            <div id="risk_percent_field">
+                <label for="risk_percent">Risk (%):</label>
+                <input type="text" id="risk_percent" name="risk_percent">
+            </div>
+
+            <div id="risk_amount_field" style="display: none;">
+                <label for="risk_amount">Zarar Tutarı (USD):</label>
+                <input type="text" id="risk_amount" name="risk_amount">
+            </div>
+            <label for="entry_price">Giriş Fiyatı:</label>
+            <input type="text" id="entry_price" name="entry_price" required>
+
+            <label for="sl_price">SL Fiyat:</label>
+            <input type="text" id="sl_price" name="sl_price" required>
+
+            <label for="tp_price">TP Fiyat:</label>
+            <input type="text" id="tp_price" name="tp_price" required>
+
+            <button type="submit">Hesapla</button>
+        </form>
+
+        {% if result %}
+            <div class="result">
+                <h2>İşlem Özeti</h2>
+                <div class="summary">
+                    <p><strong>Varlık:</strong> <span class="highlight">{{ result.asset }}</span></p>
+                    <p><strong>Giriş Fiyatı:</strong> <span class="highlight">{{ result.entry_price }}</span></p>
+                    <p><strong>SL Fiyatı:</strong> <span class="highlight">{{ result.sl_price }}</span></p>
+                    <p><strong>TP Fiyatı:</strong> <span class="highlight">{{ result.tp_price }}</span></p>
+                    <p><strong>Lot Miktarı:</strong> <span class="highlight">{{ result.lot_size }}</span></p>
+                </div>
+                <div class="profit-loss">
+                    <p class="profit">
+                        <span class="icon">💵</span>
+                        <strong>TP Karı:</strong> <span class="highlight">{{ result.tp_profit }} USD</span>
+                    </p>
+                    <p class="loss">
+                        <span class="icon">💸</span>
+                        <strong>SL Zararı:</strong> <span class="highlight">{{ result.sl_loss }} USD</span>
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+    </div>
+</body>
+</html>
