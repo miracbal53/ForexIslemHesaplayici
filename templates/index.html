@@ -52,44 +52,45 @@
             background-color: #45a049;
         }
         .result {
-        margin-top: 20px;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border: 1px solid #cccccc;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .result h2 {
-        text-align: center;
-        color: #333333;
-        margin-bottom: 20px;
-    }
-    .summary p, .profit-loss p {
-        margin: 10px 0;
-        font-size: 16px;
-    }
-    .highlight {
-        font-weight: bold;
-        color: #333333;
-    }
-    .profit {
-        color: #4CAF50;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-    }
-    .loss {
-        color: #f44336;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-    }
-    .icon {
-        font-size: 20px;
-        margin-right: 8px;
-    }
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .result h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .summary p, .profit-loss p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #333333;
+        }
+        .profit {
+            color: #4CAF50;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .loss {
+            color: #f44336;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Forex İşlem Hesaplayıcı</h1>
@@ -132,27 +133,26 @@
         </form>
 
         {% if result %}
-            <div class="result">
-                <h2>İşlem Özeti</h2>
-                <div class="summary">
-                    <p><strong>Varlık:</strong> <span class="highlight">{{ result.asset }}</span></p>
-                    <p><strong>Giriş Fiyatı:</strong> <span class="highlight">{{ result.entry_price }}</span></p>
-                    <p><strong>SL Fiyatı:</strong> <span class="highlight">{{ result.sl_price }}</span></p>
-                    <p><strong>TP Fiyatı:</strong> <span class="highlight">{{ result.tp_price }}</span></p>
-                    <p><strong>Lot Miktarı:</strong> <span class="highlight">{{ result.lot_size }}</span></p>
-                </div>
-                <div class="profit-loss">
-                    <p class="profit">
-                        <span class="icon">💵</span>
-                        <strong>TP Karı:</strong> <span class="highlight">{{ result.tp_profit }} USD</span>
-                    </p>
-                    <p class="loss">
-                        <span class="icon">💸</span>
-                        <strong>SL Zararı:</strong> <span class="highlight">{{ result.sl_loss }} USD</span>
-                    </p>
-                </div>
-            </div>
-            {% endif %}
+        <div class="result">
+            {{ result|safe }}
+        </div>
+        {% endif %}
     </div>
+
+    <script>
+    function toggleFields() {
+        const calculationType = document.getElementById("calculation_type").value;
+        const riskPercentField = document.getElementById("risk_percent_field");
+        const riskAmountField = document.getElementById("risk_amount_field");
+
+        if (calculationType === "Risk Yüzdesi") {
+            riskPercentField.style.display = "block";
+            riskAmountField.style.display = "none";
+        } else if (calculationType === "Zarar Tutarı") {
+            riskPercentField.style.display = "none";
+            riskAmountField.style.display = "block";
+        }
+    }
+</script>
 </body>
 </html>

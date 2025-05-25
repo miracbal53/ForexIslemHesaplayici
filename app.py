@@ -8,11 +8,11 @@ assets = {
     "XAUUSD": {"pip_size": 0.01, "pip_value": 1.0},
     "EURUSD": {"pip_size": 0.0001, "pip_value": 10.0},
     "BTCUSD": {"pip_size": 1.0, "pip_value": 0.01},
-    "AUDUSD": {"pip_size": 0.0001, "pip_value": 10.0},  # Avustralya Doları / ABD Doları
-    "XAGUSD": {"pip_size": 0.01, "pip_value": 50.0},   # Gümüş / ABD Doları
-    "USDCHF": {"pip_size": 0.0001, "pip_value": 10.0}, # ABD Doları / İsviçre Frangı
-    "GBPUSD": {"pip_size": 0.0001, "pip_value": 10.0}, # İngiliz Sterlini / ABD Doları
-    "ETHUSD": {"pip_size": 0.01, "pip_value": 0.1},    # Ethereum / ABD Doları
+    "AUDUSD": {"pip_size": 0.0001, "pip_value": 10.0},
+    "XAGUSD": {"pip_size": 0.01, "pip_value": 50.0},
+    "USDCHF": {"pip_size": 0.0001, "pip_value": 10.0},
+    "GBPUSD": {"pip_size": 0.0001, "pip_value": 10.0},
+    "ETHUSD": {"pip_size": 0.01, "pip_value": 0.1},
 }
 
 @app.route("/", methods=["GET", "POST"])
@@ -25,7 +25,7 @@ def index():
             calculation_type = request.form["calculation_type"]
             sl_price = float(request.form["sl_price"])
             entry_price = float(request.form["entry_price"])
-            tp_price = float(request.form.get("tp_price", 0))  # TP Fiyatı kontrolü
+            tp_price = float(request.form.get("tp_price", 0))
             asset = request.form["asset"]
 
             # Varlık bilgilerini al
@@ -40,7 +40,7 @@ def index():
                 risk_amount = float(request.form["risk_amount"])
             else:
                 result = "Zarar türü seçilmedi!"
-                return render_template("index.html", result=result)
+                return render_template("index.html", result=result, assets=assets.keys())
 
             pip_distance = abs(entry_price - sl_price) / pip_size
             lot_size = risk_amount / (pip_distance * pip_value)
@@ -48,7 +48,7 @@ def index():
             tp_profit = tp_pip * pip_value * lot_size
             sl_loss = risk_amount
 
-            # Modal içeriği
+            # İşlem özeti
             result = f"""
                 <h2>İşlem Özeti</h2>
                 <p><strong>Varlık:</strong> {asset}</p>
@@ -64,5 +64,5 @@ def index():
     return render_template("index.html", result=result, assets=assets.keys())
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
